@@ -57,25 +57,24 @@ ButtonState buttonRead() { // En funktion som läser av knappen och returnerar i
 SystemState state = LED_OFF; // Startvärde för hela systemets tillstånd
 
 void loop() {
+  delay(10);
   ButtonState buttonState = buttonRead(); // Kör funktionen som läser av knappen
 
-  switch (state) { // switch case är en kontrollstruktur i C++ som kan hantera state machines på ett bra sätt.
+  switch (buttonState) { // switch case är en kontrollstruktur i C++ som kan hantera state machines på ett bra sätt.
   // Det liknar if/else if/else
     
-    case LED_OFF: // Om vi är i tillståndet att LED är av
-      if (buttonState==PRESSED) { //Om vi fick tillbaka att knappen precis trycks ner
-        Serial.println("Turning on LED"); // Felsökning
-        digitalWrite(LED_PIN, HIGH); // Tänd LED:en
-        state = LED_ON; // Ändra tillstånd
-      }
+    case DOWN: // Om vi är i tillståndet att knappen är nedtryckt
+      Serial.println("Turning on LED"); // Felsökning
+      digitalWrite(LED_PIN, HIGH); // Tänd LED:en
+      state = LED_ON; // Ändra tillstånd
+      
       break; // I slutet av en case måste vi alltid ha en break, för annars kör den alla case
     
-    case LED_ON: // Om vi är i tillståndet att LED är på
-      if (buttonState==RELEASED) { // Om vi fick tillbaka att knappen precis trycks ner
+    case UP: // Om vi är i tillståndet att knappen är uppe
         Serial.println("Turning off LED"); // Felsökning
         digitalWrite(LED_PIN, LOW); // Släck LED:en
         state = LED_OFF; // Ändra tillstånd
-      }
+      
       break;
   }
 }
