@@ -71,7 +71,7 @@ void loop() {
       break; // I slutet av en case måste vi alltid ha en break, för annars kör den alla case
     
     case LED_ON: // Om vi är i tillståndet att LED är på
-      if (buttonState==PRESSED) { // Om vi fick tillbaka att knappen precis trycks ner
+      if (buttonState==RELEASED) { // Om vi fick tillbaka att knappen precis trycks ner
         Serial.println("Turning off LED"); // Felsökning
         digitalWrite(LED_PIN, LOW); // Släck LED:en
         state = LED_OFF; // Ändra tillstånd
