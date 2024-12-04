@@ -3,6 +3,11 @@
 const int BUTTON_PIN = 12; // Vilken pin knappen ska vara på
 const int LED_PIN = 10; // Vilken pin LED:en ska vara på
 const int DEBOUNCE_DELAY = 50; // Delay för att reglera debounce
+const int BLINK_TIME = 250;
+int LAST_LED_UPDATE = 0;
+int LED_STATE = LOW;
+int TIMEOUT_TIME = 5000;
+unsigned long TIME_STATE_CHANGE;
 
 enum ButtonState { // Här skapar vi en egen datatyp som heter ButtonState. Den kan anta fyra olika värden.
   UP,
@@ -11,9 +16,10 @@ enum ButtonState { // Här skapar vi en egen datatyp som heter ButtonState. Den 
   RELEASED
 };
 
-enum SystemState { // Här skapar vi en egen datatyp som heter SystemState. Den kan ha två olika värden.
+enum SystemState { // Här skapar vi en egen datatyp som heter SystemState. Den kan ha tre olika värden.
   LED_ON,
-  LED_OFF
+  LED_OFF,
+  LED_BLINK
 };
 
 void setup() {
@@ -45,7 +51,7 @@ ButtonState buttonRead() { // En funktion som läser av knappen och returnerar i
       }
     }
   }
-  
+
   if (lastButtonState == LOW) { // Om buttonstate inte har ändrats och den är nedtryckt
     return DOWN; // Returnera att knappen är i stabilt nedtryckt tillstånd
   }
@@ -54,27 +60,56 @@ ButtonState buttonRead() { // En funktion som läser av knappen och returnerar i
   }
 }
 
+void BLINK_LED() { //Funktion för att blinka LEDen
+  int reading = millis();
+      if (reading - LAST_LED_UPDATE >= BLINK_TIME) {
+        LAST_LED_UPDATE = reading;
+        LED_STATE = !LED_STATE;
+        digitalWrite(LED_PIN,LED_STATE);
+      }
+}
 SystemState state = LED_OFF; // Startvärde för hela systemets tillstånd
 
 void loop() {
-  delay(10);
   ButtonState buttonState = buttonRead(); // Kör funktionen som läser av knappen
 
-  switch (buttonState) { // switch case är en kontrollstruktur i C++ som kan hantera state machines på ett bra sätt.
+  switch (state) { // switch case är en kontrollstruktur i C++ som kan hantera state machines på ett bra sätt.
   // Det liknar if/else if/else
     
-    case DOWN: // Om vi är i tillståndet att knappen är nedtryckt
-      Serial.println("Turning on LED"); // Felsökning
-      digitalWrite(LED_PIN, HIGH); // Tänd LED:en
-      state = LED_ON; // Ändra tillstånd
-      
+    case LED_OFF: // Om vi är i tillståndet att LED är av
+      digitalWrite(LED_PIN, LOW); //Om ingen knapp trycks ned ska LEDen fortsätta vara släckt
+      if (buttonState==PRESSED) { //Om vi fick tillbaka att knappen precis trycks ner
+        Serial.println("Turning on LED"); // Felsökning
+        digitalWrite(LED_PIN, HIGH); // Tänd LED:en
+        TIME_STATE_CHANGE = millis(); //Starta klockan för timeout när tillståndet ändras
+        state = LED_ON; // Ändra tillstånd
+      }
+
       break; // I slutet av en case måste vi alltid ha en break, för annars kör den alla case
     
-    case UP: // Om vi är i tillståndet att knappen är uppe
+    case LED_ON: // Om vi är i tillståndet att LED är på
+      digitalWrite(LED_PIN, HIGH); //Om ingen knapp trycks ned ska LEDen fortsätta vara tänd
+      if (buttonState==PRESSED) { // Om vi fick tillbaka att knappen precis trycks ner
+        Serial.println("Starting LED blink"); // Felsökning
+        TIME_STATE_CHANGE = millis(); //Starta klockan för timeout när tillståndet ändras
+        state = LED_BLINK; // Ändra tillstånd
+      }
+      else if (millis() - TIME_STATE_CHANGE >= TIMEOUT_TIME) {
+        state = LED_OFF;
+      }
+      break;
+    
+    case LED_BLINK: //Om vi är i tillståndet att LEDen blinkar
+      BLINK_LED();
+      if (buttonState==PRESSED) { //Om vi fick tillbaka att knappen precis trycks ner
         Serial.println("Turning off LED"); // Felsökning
         digitalWrite(LED_PIN, LOW); // Släck LED:en
+        TIME_STATE_CHANGE = millis(); //Starta klockan för timeout när tillståndet ändras
         state = LED_OFF; // Ändra tillstånd
-      
+      }
+      else if (millis() - TIME_STATE_CHANGE >= TIMEOUT_TIME) {
+        state = LED_OFF;
+      }
       break;
-  }
+  }   
 }
