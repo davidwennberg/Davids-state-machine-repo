@@ -94,7 +94,7 @@ void loop() {
         TIME_STATE_CHANGE = millis(); //Starta klockan för timeout när tillståndet ändras
         state = LED_BLINK; // Ändra tillstånd
       }
-      else if (millis() - TIME_STATE_CHANGE >= TIMEOUT_TIME) {
+      else if (millis() - TIME_STATE_CHANGE >= TIMEOUT_TIME) { //Stäng av LEDen om knappen ej rörts på 5 sekunder
         state = LED_OFF;
       }
       break;
@@ -107,7 +107,7 @@ void loop() {
         TIME_STATE_CHANGE = millis(); //Starta klockan för timeout när tillståndet ändras
         state = LED_OFF; // Ändra tillstånd
       }
-      else if (millis() - TIME_STATE_CHANGE >= TIMEOUT_TIME) {
+      else if (millis() - TIME_STATE_CHANGE >= TIMEOUT_TIME) { //Stäng av LEDen om knappen ej rörts på 5 sekunder
         state = LED_OFF;
       }
       break;
