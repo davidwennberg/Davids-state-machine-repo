@@ -35,11 +35,32 @@
       "left": 133.85,
       "rotate": 90,
       "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot1",
+      "top": -10.9,
+      "left": 278.2,
+      "rotate": 180,
+      "attrs": {}
     }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "bb1:3t.a", "bb1:tn.1", "gray", [ "v0" ] ],
+    [ "bb1:23t.a", "bb1:tp.18", "red", [ "v-38.4" ] ],
+    [ "bb1:12t.a", "bb1:33t.a", "blue", [ "v-9.6", "h201.6" ] ],
+    [ "bb1:10t.a", "bb1:38t.a", "green", [ "v-19.2", "h268.8" ] ],
+    [ "bb1:40t.a", "bb1:tn.32", "green", [ "v0" ] ],
+    [ "btn1:1.l", "bb1:40t.e", "", [ "$bb" ] ],
+    [ "btn1:2.l", "bb1:38t.e", "", [ "$bb" ] ],
+    [ "btn1:1.r", "bb1:40b.f", "", [ "$bb" ] ],
+    [ "btn1:2.r", "bb1:38b.f", "", [ "$bb" ] ],
+    [ "led1:A", "bb1:33t.e", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:34t.e", "", [ "$bb" ] ],
+    [ "r1:1", "bb1:tn.27", "", [ "$bb" ] ],
+    [ "r1:2", "bb1:34t.d", "", [ "$bb" ] ],
     [ "esp:0", "bb1:22t.b", "", [ "$bb" ] ],
     [ "esp:1", "bb1:21t.b", "", [ "$bb" ] ],
     [ "esp:2", "bb1:20t.b", "", [ "$bb" ] ],
@@ -82,19 +103,9 @@
     [ "esp:RX", "bb1:19b.i", "", [ "$bb" ] ],
     [ "esp:RST", "bb1:22b.i", "", [ "$bb" ] ],
     [ "esp:GND.2", "bb1:23b.i", "", [ "$bb" ] ],
-    [ "bb1:3t.a", "bb1:tn.1", "gray", [ "v0" ] ],
-    [ "bb1:23t.a", "bb1:tp.18", "red", [ "v-38.4" ] ],
-    [ "btn1:1.l", "bb1:40t.e", "", [ "$bb" ] ],
-    [ "btn1:2.l", "bb1:38t.e", "", [ "$bb" ] ],
-    [ "btn1:1.r", "bb1:40b.f", "", [ "$bb" ] ],
-    [ "btn1:2.r", "bb1:38b.f", "", [ "$bb" ] ],
-    [ "bb1:12t.a", "bb1:33t.a", "blue", [ "v-9.6", "h201.6" ] ],
-    [ "r1:1", "bb1:tn.27", "", [ "$bb" ] ],
-    [ "r1:2", "bb1:34t.d", "", [ "$bb" ] ],
-    [ "bb1:10t.a", "bb1:38t.a", "green", [ "v-19.2", "h268.8" ] ],
-    [ "bb1:40t.a", "bb1:tn.32", "green", [ "v0" ] ],
-    [ "led1:A", "bb1:33t.e", "", [ "$bb" ] ],
-    [ "led1:C", "bb1:34t.e", "", [ "$bb" ] ]
+    [ "bb1:49t.a", "bb1:tp.40", "red", [ "v0" ] ],
+    [ "bb1:51t.a", "bb1:tn.41", "gray", [ "v0" ] ],
+    [ "bb1:50t.a", "bb1:14t.a", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }

@@ -1,5 +1,86 @@
 #include <Arduino.h>
 
+const int button_pin = 12;
+const int LED_pin = 10;
+const int pot_pin = 8;
+
+
+int last_button_state = HIGH;
+int LED_state = LOW;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(button_pin, INPUT_PULLUP);
+  pinMode(pot_pin, INPUT);
+  ledcAttach(LED_pin, 5000, 8);
+  analogReadResolution(12);
+}
+
+void loop() {
+
+  int pot_reading = analogRead(pot_pin);
+  
+  int output = map(pot_reading, 0, 4095, 0, 255);
+
+  int button_state = digitalRead(button_pin);
+
+  if(button_state == LOW and last_button_state == HIGH) { //Debouncing
+    Serial.println("Knapptryck registrerad, debouncing"); //Felsökning
+    
+    delay(20);
+
+    button_state = digitalRead(button_pin);
+
+    if (button_state != last_button_state) {
+
+      Serial.println("Knapptryck confirmed"); //Felsökning
+      Serial.println(output);
+      ledcWrite(LED_pin, output);
+      last_button_state = button_state;
+      LED_state = !LED_state;
+      Serial.println(LED_state);
+      
+    }
+    
+  }
+  delay(10);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 const int BUTTON_PIN = 12; // Vilken pin knappen ska vara på
 const int LED_PIN = 10; // Vilken pin LED:en ska vara på
 const int DEBOUNCE_DELAY = 50; // Delay för att reglera debounce
@@ -113,3 +194,5 @@ void loop() {
       break;
   }   
 }
+
+*/
